@@ -114,9 +114,10 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/AlgenBlockchain",
+      "github": "https://github.com/ALGEN-Network",
+      "telegram": "https://t.me/AlgenBlockchain",
+      "discord": "https://discord.com/invite/D5KtJjadEm"
     }
   }
 }
