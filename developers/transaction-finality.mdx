@@ -1,0 +1,59 @@
+---
+description: "Detailed information about transaction finality on Algen."
+title: "Transaction Finality"
+---
+
+## What is transaction finality?
+
+Finality refers to the point at which a transaction sent to Algen becomes irreversible. This provides guarantees that the transaction will not be rolled back or lost.
+
+Unlike traditional Optimistic Rollups which typically require a 7-day challenge period for withdrawals, Algen's unique **AUN (Algen Unified Network)** architecture allows for significantly faster finality for both standard transactions and withdrawals.
+
+## Finality for Algen L2 Transactions
+
+This describes finality for transactions on Algen L2 (and Mesher networks), excluding withdrawals.
+
+For transactions on Algen, finality progresses through stages that provide increasing security guarantees, leveraging Algen's fast block times (L1: 3s, L2: 2s or 1s).
+
+<Steps>
+  <Step title="Sequencer Preconfirmation: ~200ms">
+    The transaction is received and pre-confirmed by the Algen sequencer.
+  </Step>
+  <Step title="L2 Block Inclusion: ~2s (Mesher ~1s)">
+    The transaction is included in an L2 block and distributed to validator nodes.
+  </Step>
+  <Step title="L1 Batch Inclusion: ~12s">
+    A batch containing the transaction has been posted to Algen L1. Because Algen L1 has a rapid 3-second block time, data is committed to the main chain very quickly.
+  </Step>
+  <Step title="L1 Batch Finality: ~3m">
+    The Algen L1 block containing the batch data has reached finality (approx. 64 L1 blocks). At this stage, the transaction is secured by the full consensus of the Algen L1 network and is effectively impossible to reverse.
+  </Step>
+</Steps>
+
+## Finality for Withdrawal Transactions
+
+This describes finality of transactions that move funds from Algen L2 to Algen L1.
+
+**Withdrawals on Algen do NOT require a 7-day waiting period.**
+
+Thanks to the **Shuttle** protocol and TEE (Trusted Execution Environment) integration, withdrawals finalize in **minutes**, not days.
+
+<Accordion title="How does Algen achieve fast withdrawals?">
+  Algen abandons the traditional reliance on a 7-day fraud proof challenge window seen in Optimistic Rollups. Instead, it adopts a pioneering L1+L2 integrated design.
+
+  By utilizing TEE for off-chain verification and synchronizing state hashes with L1, Algen ensures asset security without the long wait. This allows users to bridge funds back to L1 in approximately **2 minutes**, significantly improving capital efficiency.
+</Accordion>
+
+## FAQ
+
+<AccordionGroup>
+  <Accordion title="If there is a reorg on Algen L1, will it cause a reorg on L2?">
+    In almost all circumstances, no. Algen L2 maintains a configurable lag and can resubmit batch data to L1 transparently while the L2 chain continues to progress.
+  </Accordion>
+  <Accordion title="How long do deposit transactions take to finalize?">
+    Transactions moving funds from Algen L1 to Algen L2 are typically processed and included by the sequencer within minutes.
+  </Accordion>
+  <Accordion title="Is there a Fault Dispute Game like on Base/Optimism?">
+    Algen uses a different security model relying on AUN and TEEs to prevent sequencer misconduct, eliminating the need for a slow, interactive dispute game for standard withdrawals.
+  </Accordion>
+</AccordionGroup>

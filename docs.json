@@ -18,16 +18,16 @@
             "pages": [
               "developers/introduction",
               "developers/why-algen",
-              "developers/deploy",
-              "development/"
+              "developers/deploy-on-algen"
             ]
           },
           {
             "group": "Network Information",
             "pages": [
-              "developers/connecting",
-              "developers/contract",
-              "developers/fees"
+              "developers/connecting-to-algen",
+              "developers/contract-addresses",
+              "developers/network-fees",
+              "developers/transaction-finality"              
             ]
           }
         ]
@@ -35,14 +35,6 @@
       {
         "tab": "API Reference",
         "groups": [
-          {
-            "group": "Getting started",
-            "pages": [
-              "index",
-              "quickstart",
-              "development"
-            ]
-          },
           {
             "group": "Development",
             "pages": [
@@ -69,7 +61,8 @@
               "concept/aun",
               "concept/asdo",
               "concept/mesher",
-              "concept/shuttle"
+              "concept/shuttle",
+              "concept/x402"
             ]
           }
         ]
@@ -103,15 +96,15 @@
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {
