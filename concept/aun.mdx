@@ -1,4 +1,26 @@
 ---
 title: "AUN"
-description: "Description of your new file."
+description: "Algen Unified Network"
 ---
+
+AUN is an integrated architecture of L1, L2 and TEE.
+
+The AUN architecture abandons the traditional loose coupling between L2 and L1 layers. Through deep integration of the L1 consensus layer, L2 execution layer, and TEE trusted layer, it achieves a triple breakthrough in security, efficiency, and flexibility.
+
+### Eliminating the Risk of Malicious Sortters
+
+TEE Offline Verification: All L2 local consensus hashes (such as the 50ms periodic state of AGN) must be synchronized to the TEE environment and periodically compared with the L1 global ledger. If an anomaly is detected (such as a state hash conflict), the relevant assets are immediately frozen and an optimistic rollback is initiated.
+
+Zero-knowledge proof correction: During the dispute period, the verification node needs to submit ZKP proof of the legality of its transaction. Only the erroneous branch is reset, avoiding the waste of resources from a full network rollback.
+
+### Layered Consensus Efficiency Optimization
+
+L1 focuses on global finality: L1 only handles core transactions such as cross-chain settlement and DA layer anchoring, and supports high throughput through Blob scaling and data compression (such as EIP-4844 compatibility).
+
+L2 freely expandable: Each L2 can independently choose a consensus engine (such as PBFT for low-latency gaming chains and Snowman for high-security financial chains), and achieve seamless migration of smart contracts through the WASM runtime.
+
+### Maximizing Resource Utilization
+
+Hybrid Rollup Model: AFN adopts a ZK-Optimistic hybrid solution. Small transactions (\<\$1,000) achieve 3-second finality through ZK-Rollup, while large transactions use Optimistic Rollup but allow users to exit their pledged assets early, reducing the lock-up period for funds.
+
+Liquidity Sharing Pool: Through zk-SNARK-verified Proof of Liquidity (PoL), AFN divides LP assets into a priority layer (providing low slippage trading) and a buffer layer (to cope with sudden redemptions), improving capital efficiency by more than 300%.

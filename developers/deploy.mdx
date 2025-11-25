@@ -1,0 +1,127 @@
+---
+title: "Deploy on Algen"
+description: "Welcome to the Algen deployment quickstart guide! This comprehensive walkthrough will help you set up your environment and deploy smart contracts on the Algen Network. Whether you're a seasoned developer or just starting out, this guide has got you covered."
+---
+
+## What You'll Achieve
+
+By the end of this quickstart, you'll be able to:
+
+- Set up your development environment to deploy on Algen
+- Deploy your smart contracts to Algen L2
+- Connect your frontend to your smart contracts
+
+## Set Up Your Development Environment
+
+1. Create a new project directory
+
+```
+mkdir my-algen-project && cd my-algen-project
+```
+
+1. Install Foundry, a powerful framework for smart contract development
+
+```
+curl -L <https://foundry.paradigm.xyz> | bash
+foundryup
+```
+
+This installs Foundry and updates it to the latest version.
+
+1. Initialize a new Solidity project
+
+```
+forge init
+```
+
+Your Foundry project is now ready. You'll find an example contract in the `src` directory, which you can replace with your own contracts. For the purposes of this guide, we'll use the Counter contract provided in `/src/Counter.sol`
+
+## Configure Foundry with Algen
+
+To deploy your smart contracts to Algen, you need two key components:
+
+1. A node connection to interact with the Algen network
+2. A funded private key to deploy the contract
+
+Let's set up both of these:
+
+### 1. Set up your node connection
+
+1. Create a `.env` file in your project's root directory
+2. Add the Algen network RPC URL to your `.env` file
+
+```
+ALGEN_L2_RPC_URL="<https://rpc.alg2.algen.network>"
+ALGEN_L2_TEST_RPC_URL="<https://rpc.alg2-test.algen.network>"
+```
+
+1. Load your environment variables
+
+```
+source .env
+```
+
+### 2. Secure your private key
+
+1. Store your private key in Foundry's secure keystore
+
+```
+cast wallet import deployer --interactive
+```
+
+1. When prompted enter your private key and a password.
+
+Your private key is stored in `~/.foundry/keystores` which is not tracked by git.
+
+## Deploy Your Contracts
+
+Now that your environment is set up, let's deploy your contracts to Algen L2 Testnet.
+
+1. (Optional) First, perform a dry run to simulate the deployment and verify everything is configured correctly:
+
+```
+forge create ./src/Counter.sol:Counter --rpc-url $ALGEN_L2_TEST_RPC_URL --account deployer
+```
+
+This performs a simulation without broadcasting the transaction to the network. You'll see the transaction details and contract ABI, but no actual deployment will occur.
+
+1. Deploy your contract by adding the `--broadcast` flag:
+
+```
+forge create ./src/Counter.sol:Counter --rpc-url $ALGEN_L2_TEST_RPC_URL --account deployer --broadcast
+```
+
+Note the format of the contract being deployed is `<contract-path>:<contract-name>`.
+
+1. After successful deployment, you'll see output including:
+
+`Deployer: 0x... Deployed to: 0x... <-- YOUR CONTRACT ADDRESS Transaction hash: 0x...`
+
+1. Copy the deployed contract address and add it to your `.env` file:
+
+```
+COUNTER_CONTRACT_ADDRESS="0x..."
+```
+
+Replace `0x...` with your actual deployed contract address from the output above.
+
+1. Load the new environment variable:
+
+```
+source .env
+```
+
+### Verify Your Deployment
+
+To ensure your contract was deployed successfully:
+
+1. Check the transaction on [Algen L2 Test Scan](https://scan.alg2-test.algen.network) using your transaction hash
+2. Use the `cast` command to interact with your deployed contract from the command line:
+
+```
+cast call $COUNTER_CONTRACT_ADDRESS "number()(uint256)" --rpc-url $ALGEN_L2_TEST_RPC_URL
+```
+
+This will return the initial value of the Counter contract's `number` storage variable, which will be `0`.
+
+**Congratulations! You've deployed your smart contracts to Algen L2 Testnet!**
