@@ -38,16 +38,15 @@
           {
             "group": "Development",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "api-reference/introduction"
             ]
           },
           {
-            "group": "AI tools",
+            "group": "API",
             "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "api-reference/endpoint/get",
+              "api-reference/endpoint/create",
+              "api-reference/endpoint/delete"
             ]
           }
         ]
