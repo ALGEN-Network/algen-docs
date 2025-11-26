@@ -113,5 +113,10 @@
       "telegram": "https://t.me/AlgenBlockchain",
       "discord": "https://discord.com/invite/D5KtJjadEm"
     }
+  },
+  "seo": {
+    "metatags": {
+        "og:image": "images/og.png"
+    }
   }
 }
