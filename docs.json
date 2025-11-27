@@ -18,7 +18,8 @@
             "pages": [
               "developers/introduction",
               "developers/why-algen",
-              "developers/deploy-on-algen"
+              "developers/deploy-on-algen",
+              "developers/x402-payment"              
             ]
           },
           {
@@ -42,7 +43,13 @@
             ]
           },
           {
-            "group": "API",
+            "group": "ASDO",
+            "pages": [
+              "api-reference/endpoint/asdo"
+            ]
+          },
+          {
+            "group": "x402",
             "pages": [
               "api-reference/endpoint/asdo"
             ]
