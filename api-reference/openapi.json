@@ -1,8 +1,8 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
+    "title": "Algen API",
+    "description": "Some important api listed in there",
     "license": {
       "name": "MIT"
     },
@@ -10,63 +10,19 @@
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
-    }
-  ],
-  "security": [
-    {
-      "bearerAuth": []
+      "url": "https://sdo-test.algen.network"
     }
   ],
   "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
+    "/": {
       "post": {
-        "description": "Creates a new plant in the store",
+        "description": "Construct the correct original transaction before sending it to the right chain.",
         "requestBody": {
-          "description": "Plant to add to the store",
+          "description": "eth_routerTransaction",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "$ref": "#/components/schemas/RouterTransaction"
               }
             }
           },
@@ -74,11 +30,11 @@
         },
         "responses": {
           "200": {
-            "description": "plant response",
+            "description": "Original transaction object",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Plant"
+                  "$ref": "#/components/schemas/RouterTransactionRes"
                 }
               }
             }
@@ -96,99 +52,68 @@
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "webhooks": {
-    "/plant/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
-        "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
-          }
-        }
-      }
-    }
   },
   "components": {
     "schemas": {
-      "Plant": {
+      "RouterTransaction": {
         "required": [
-          "name"
+          "from",
+          "to",
+          "data",
+          "value"
         ],
         "type": "object",
         "properties": {
-          "name": {
-            "description": "The name of the plant",
+          "from": {
+            "description": "The address from which the transaction is sent",
             "type": "string"
           },
-          "tag": {
-            "description": "Tag to specify the type",
+          "to": {
+            "description": "The address the transaction is directed to",
+            "type": "string"
+          },
+          "data": {
+            "description": "The compiled code of a contract or the hash of the invoked method signature and encoded parameters",
+            "type": "string"
+          },
+          "value": {
+            "description": "The integer of the value sent with this transaction, in wei",
             "type": "string"
           }
         }
       },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
+      "RouterTransactionRes": {
+        "required": [
+          "nonce",
+          "chainId",
+          "gasLimit"
+        ],
+        "type": "object",
+        "properties": {
+          "nonce": {
+            "description": "The integer of a nonce. This allows overwriting the own pending transactions that use the same nonce",
+            "type": "string"
           },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
+          "chainId": {
+            "description": "The hex value of the matched chain ID",
+            "type": "string"
+          },
+          "gasLimit": {
+            "description": "Estimated gas limit this tx will cost",
+            "type": "string",
+          },
+          "maxFeePerGas": {
+            "description": "The hex value of the max gas fee you will pay",
+            "type": "string",
+          },
+          "maxPriorityFeePerGas": {
+            "description": "The hex value of the priority fee you will pay",
+            "type": "string",
+          },
+          "gasPrice": {
+            "description": "The hex value of the current gas price (used by legacy tx)",
+            "type": "string",
           }
-        ]
       },
       "Error": {
         "required": [
@@ -205,12 +130,6 @@
             "type": "string"
           }
         }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
       }
     }
   }
