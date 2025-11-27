@@ -3,9 +3,7 @@
   "info": {
     "title": "Algen API",
     "description": "Some important api listed in there",
-    "license": {
-      "name": "MIT"
-    },
+    "license": { "name": "MIT" },
     "version": "1.0.0"
   },
   "servers": [
@@ -19,23 +17,19 @@
         "description": "Construct the correct original transaction before sending it to the right chain.",
         "requestBody": {
           "description": "eth_routerTransaction",
+          "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RouterTransaction"
-              }
+              "schema": { "$ref": "#/components/schemas/RouterTransaction" }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
             "description": "Original transaction object",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RouterTransactionRes"
-                }
+                "schema": { "$ref": "#/components/schemas/RouterTransactionRes" }
               }
             }
           },
@@ -43,84 +37,71 @@
             "description": "unexpected error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                "schema": { "$ref": "#/components/schemas/Error" }
               }
             }
           }
         }
       }
-    },
+    }
   },
   "components": {
     "schemas": {
       "RouterTransaction": {
-        "required": [
-          "from",
-          "to",
-          "data",
-          "value"
-        ],
         "type": "object",
+        "required": ["from", "to", "data", "value"],
         "properties": {
           "from": {
-            "description": "The address from which the transaction is sent",
-            "type": "string"
+            "type": "string",
+            "description": "The address from which the transaction is sent"
           },
           "to": {
-            "description": "The address the transaction is directed to",
-            "type": "string"
+            "type": "string",
+            "description": "The address the transaction is directed to"
           },
           "data": {
-            "description": "The compiled code of a contract or the hash of the invoked method signature and encoded parameters",
-            "type": "string"
+            "type": "string",
+            "description": "The compiled code of a contract or the hash of the invoked method signature and encoded parameters"
           },
           "value": {
-            "description": "The integer of the value sent with this transaction, in wei",
-            "type": "string"
+            "type": "string",
+            "description": "The integer of the value sent with this transaction, in wei"
           }
         }
       },
       "RouterTransactionRes": {
-        "required": [
-          "nonce",
-          "chainId",
-          "gasLimit"
-        ],
         "type": "object",
+        "required": ["nonce", "chainId", "gasLimit"],
         "properties": {
           "nonce": {
-            "description": "The integer of a nonce. This allows overwriting the own pending transactions that use the same nonce",
-            "type": "string"
+            "type": "string",
+            "description": "The integer nonce for the transaction"
           },
           "chainId": {
-            "description": "The hex value of the matched chain ID",
-            "type": "string"
+            "type": "string",
+            "description": "Hex value of matched chain ID"
           },
           "gasLimit": {
-            "description": "Estimated gas limit this tx will cost",
             "type": "string",
+            "description": "Estimated gas limit for this transaction"
           },
           "maxFeePerGas": {
-            "description": "The hex value of the max gas fee you will pay",
             "type": "string",
+            "description": "Max gas fee (EIP-1559)"
           },
           "maxPriorityFeePerGas": {
-            "description": "The hex value of the priority fee you will pay",
             "type": "string",
+            "description": "Priority gas fee (EIP-1559)"
           },
           "gasPrice": {
-            "description": "The hex value of the current gas price (used by legacy tx)",
             "type": "string",
+            "description": "Gas price for legacy transactions"
           }
+        }
       },
       "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
         "type": "object",
+        "required": ["error", "message"],
         "properties": {
           "error": {
             "type": "integer",

@@ -1,33 +1,172 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: "Introduction"
+description: "This API leverages the ASDO engine to intelligently route transactions to the optimal Algen chain (L1, L2, or Mesher)."
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
 
-## Welcome
+## Server
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+**Base URL:** [`https://sdo-test.algen.network`](https://sdo-test.algen.network)
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+## Endpoints
 
-## Authentication
+### `POST /` (eth_routerTransaction)
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+Constructs the correct original transaction parameters before sending it to the right chain.
+
+**Request Body** (`RouterTransaction`):
+
+- `from` (string): The address from which the transaction is sent
+- `to` (string): The address the transaction is directed to
+- `data` (string): The compiled code of a contract or the hash of the invoked method signature and encoded parameters
+- `value` (string): The integer of the value sent with this transaction, in wei
+
+**Response** (`RouterTransactionRes`):
+
+- `chainId` (string): The hex value of the matched chain ID
+- `nonce` (string): The integer of a nonce
+- `gasLimit` (string): Estimated gas limit
+- `maxFeePerGas` (string): Max gas fee
+- `maxPriorityFeePerGas` (string): Priority fee
+
+## OpenAPI Specification
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Algen API",
+    "description": "Some important api listed in there",
+    "license": {
+      "name": "MIT"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://sdo-test.algen.network"
+    }
+  ],
+  "paths": {
+    "/": {
+      "post": {
+        "description": "Construct the correct original transaction before sending it to the right chain.",
+        "requestBody": {
+          "description": "eth_routerTransaction",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RouterTransaction"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Original transaction object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouterTransactionRes"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RouterTransaction": {
+        "required": [
+          "from",
+          "to",
+          "data",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "from": {
+            "description": "The address from which the transaction is sent",
+            "type": "string"
+          },
+          "to": {
+            "description": "The address the transaction is directed to",
+            "type": "string"
+          },
+          "data": {
+            "description": "The compiled code of a contract or the hash of the invoked method signature and encoded parameters",
+            "type": "string"
+          },
+          "value": {
+            "description": "The integer of the value sent with this transaction, in wei",
+            "type": "string"
+          }
+        }
+      },
+      "RouterTransactionRes": {
+        "required": [
+          "nonce",
+          "chainId",
+          "gasLimit"
+        ],
+        "type": "object",
+        "properties": {
+          "nonce": {
+            "description": "The integer of a nonce. This allows overwriting the own pending transactions that use the same nonce",
+            "type": "string"
+          },
+          "chainId": {
+            "description": "The hex value of the matched chain ID",
+            "type": "string"
+          },
+          "gasLimit": {
+            "description": "Estimated gas limit this tx will cost",
+            "type": "string"
+          },
+          "maxFeePerGas": {
+            "description": "The hex value of the max gas fee you will pay",
+            "type": "string"
+          },
+          "maxPriorityFeePerGas": {
+            "description": "The hex value of the priority fee you will pay",
+            "type": "string"
+          },
+          "gasPrice": {
+            "description": "The hex value of the current gas price (used by legacy tx)",
+            "type": "string"
+          }
+        }
+      },
+      "Error": {
+        "required": [
+          "error",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
   }
-]
+}
 ```
