@@ -3,13 +3,21 @@ title: "Introduction"
 description: "This API leverages the ASDO engine to intelligently route transactions to the optimal Algen chain (L1, L2, or Mesher)."
 ---
 
-## Server
+## Servers
 
-**Test URL:** [`https://asdo-test.algen.network`](https://asdo-test.algen.network)
+**ASDO:**
 
-**Main URL:** [`https://asdo.algen.network`](https://asdo.algen.network)
+- **Main URL:** [`https://asdo.algen.network`](https://asdo.algen.network/)
+- **Test URL:** [`https://asdo-test.algen.network`](https://asdo-test.algen.network/)
+
+**x402 Payment:**
+
+- **Main URL:** [`https://x402.algen.network/facilitator`](https://x402.algen.network/facilitator)
+- **Test URL:** [`https://x402-test.algen.network/facilitator`](https://x402-test.algen.network/facilitator)
 
 ## Endpoints
+
+### Transaction Router
 
 ### `POST /` (eth_routerTransaction)
 
@@ -30,6 +38,42 @@ Constructs the correct original transaction parameters before sending it to the 
 - `maxFeePerGas` (string): Max gas fee
 - `maxPriorityFeePerGas` (string): Priority fee
 
+### x402 Payment Protocol
+
+### `GET /supported`
+
+Get supported network and payment methods.
+
+**Response:**
+
+- Returns a list of supported payment kinds (e.g., `mesherX`, `mesherX-testnet`).
+
+### `POST /settle`
+
+Settle x402 payments.
+
+**Request Body:**
+
+- `x402Version`: Protocol version
+- `paymentPayload`: The payment payload (EVM or Solana)
+- `paymentRequirements`: Requirements expected by the resource server
+
+**Response:**
+
+- Returns success status and transaction details.
+
+### `POST /verify`
+
+Verify x402 payment validity.
+
+**Request Body:**
+
+- Similar structure to `/settle`
+
+**Response:**
+
+- Returns `isValid` boolean and payer address.
+
 ## OpenAPI Specification
 
 ```json
@@ -45,23 +89,29 @@ Constructs the correct original transaction parameters before sending it to the 
   },
   "servers": [
     {
-      "url": "https://sdo-test.algen.network"
+      "url": ""
     }
   ],
   "paths": {
     "/": {
       "post": {
+        "servers": [
+          {
+            "url": "https://asdo.algen.network",
+            "description": "Transaction router server"
+          }
+        ],
         "description": "Construct the correct original transaction before sending it to the right chain.",
         "requestBody": {
           "description": "eth_routerTransaction",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/RouterTransaction"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -86,88 +136,320 @@ Constructs the correct original transaction parameters before sending it to the 
           }
         }
       }
-    }
-  },
-  "components": {
-    "schemas": {
-      "RouterTransaction": {
-        "required": [
-          "from",
-          "to",
-          "data",
-          "value"
-        ],
-        "type": "object",
-        "properties": {
-          "from": {
-            "description": "The address from which the transaction is sent",
-            "type": "string"
-          },
-          "to": {
-            "description": "The address the transaction is directed to",
-            "type": "string"
-          },
-          "data": {
-            "description": "The compiled code of a contract or the hash of the invoked method signature and encoded parameters",
-            "type": "string"
-          },
-          "value": {
-            "description": "The integer of the value sent with this transaction, in wei",
-            "type": "string"
+    },
+    "/supported": {
+      "get": {
+        "servers": [
+          {
+            "url": "https://x402.algen.network/facilitator",
+            "description": "x402 supported API"
           }
-        }
-      },
-      "RouterTransactionRes": {
-        "required": [
-          "nonce",
-          "chainId",
-          "gasLimit"
         ],
-        "type": "object",
-        "properties": {
-          "nonce": {
-            "description": "The integer of a nonce. This allows overwriting the own pending transactions that use the same nonce",
-            "type": "string"
+        "description": "Get supported network and pay method",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved supported payment kinds for the x402 protocol.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "kinds"
+                  ],
+                  "properties": {
+                    "kinds": {
+                      "type": "array",
+                      "description": "The list of supported payment kinds.",
+                      "items": {
+                        "$ref": "#/components/schemas/x402SupportedPaymentKind"
+                      },
+                      "example": [
+                        {
+                          "x402Version": 1,
+                          "scheme": "exact",
+                          "network": "mesherX"
+                        },
+                        {
+                          "x402Version": 1,
+                          "scheme": "exact",
+                          "network": "mesherX-testnet"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "kinds": [
+                        {
+                          "x402Version": 1,
+                          "scheme": "exact",
+                          "network": "mesherX"
+                        },
+                        {
+                          "x402Version": 1,
+                          "scheme": "exact",
+                          "network": "mesherX-testnet"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
           },
-          "chainId": {
-            "description": "The hex value of the matched chain ID",
-            "type": "string"
-          },
-          "gasLimit": {
-            "description": "Estimated gas limit this tx will cost",
-            "type": "string"
-          },
-          "maxFeePerGas": {
-            "description": "The hex value of the max gas fee you will pay",
-            "type": "string"
-          },
-          "maxPriorityFeePerGas": {
-            "description": "The hex value of the priority fee you will pay",
-            "type": "string"
-          },
-          "gasPrice": {
-            "description": "The hex value of the current gas price (used by legacy tx)",
-            "type": "string"
-          }
-        }
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
-    }
-  }
-}
-```
+    },
+    "/settle": {
+      "post": {
+        "servers": [
+          {
+            "url": "https://x402.algen.network/facilitator",
+            "description": "POST to settle x402 payments."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "x402Version": {
+                      "$ref": "#/components/schemas/X402Version"
+                    },
+                    "paymentPayload": {
+                      "$ref": "#/components/schemas/x402PaymentPayload"
+                    },
+                    "paymentRequirements": {
+                      "$ref": "#/components/schemas/x402PaymentRequirements"
+                    }
+                  },
+                  "required": [
+                    "x402Version",
+                    "paymentPayload",
+                    "paymentRequirements"
+                  ]
+                }
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "x402Version": 1,
+                    "paymentPayload": {
+                      "x402Version": 1,
+                      "scheme": "exact",
+                      "network": "mesherX",
+                      "payload": {
+                        "signature": "0xf3746613c2d920b5fdabc0856f2aeb2d4f88ee6037b8cc5d04a71a4462f13480",
+                        "authorization": {
+                          "from": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+                          "to": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+                          "value": "1000000000000000000",
+                          "validAfter": "1716150000",
+                          "validBefore": "1716150000",
+                          "nonce": "0x1234567890abcdef1234567890abcdef12345678"
+                        }
+                      }
+                    },
+                    "paymentRequirements": {
+                      "scheme": "exact",
+                      "network": "mesherX",
+                      "maxAmountRequired": "1000000",
+                      "resource": "https://api.example.com/premium/resource/123",
+                      "description": "Premium API access for data analysis",
+                      "mimeType": "application/json",
+                      "outputSchema": {
+                        "data": "string"
+                      },
+                      "payTo": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+                      "maxTimeoutSeconds": 10,
+                      "asset": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+                      "extra": {
+                        "gasLimit": "1000000"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean",
+                        "description": "Indicates whether the payment settlement is successful.",
+                        "example": false
+                      },
+                      "errorReason": {
+                        "$ref": "#/components/schemas/x402SettleErrorReason"
+                      },
+                      "payer": {
+                        "type": "string",
+                        "description": "The onchain address of the client paying for the resource.",
+                        "pattern": "^0x[a-fA-F0-9]{40}|[A-Za-z0-9][A-Za-z0-9-]{0,34}[A-Za-z0-9]$",
+                        "example": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
+                      },
+                      "transaction": {
+                        "type": "string",
+                        "description": "The settlement transaction hash.",
+                        "pattern": "^0x[a-fA-F0-9]{40}|[A-Za-z0-9][A-Za-z0-9-]{0,34}[A-Za-z0-9]$",
+                        "example": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
+                      },
+                      "network": {
+                        "type": "string",
+                        "description": "The network where settlement occurred.",
+                        "example": "base"
+                      }
+                    },
+                    "required": [
+                      "success",
+                      "payer",
+                      "transaction",
+                      "network"
+                    ]
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "success": false,
+                      "errorReason": "insufficient_funds",
+                      "payer": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+                      "transaction": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+                      "network": "base"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Successfully settled payment on the x402 protocol."
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/verify": {
+      "post": {
+        "servers": [
+          {
+            "url": "https://x402.algen.network/facilitator",
+            "description": "Verify x402 payment."
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "x402Version": {
+                    "$ref": "#/components/schemas/X402Version"
+                  },
+                  "paymentPayload": {
+                    "$ref": "#/components/schemas/x402PaymentPayload"
+                  },
+                  "paymentRequirements": {
+                    "$ref": "#/components/schemas/x402PaymentRequirements"
+                  }
+                },
+                "required": [
+                  "x402Version",
+                  "paymentPayload",
+                  "paymentRequirements"
+                ]
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "x402Version": 1,
+                    "paymentPayload": {
+                      "x402Version": 1,
+                      "scheme": "exact",
+                      "network": "base",
+                      "payload": {
+                        "signature": "0xf3746613c2d920b5fdabc0856f2aeb2d4f88ee6037b8cc5d04a71a4462f13480",
+                        "authorization": {
+                          "from": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+                          "to": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+                          "value": "1000000000000000000",
+                          "validAfter": "1716150000",
+                          "validBefore": "1716150000",
+                          "nonce": "0x1234567890abcdef1234567890abcdef12345678"
+                        }
+                      }
+                    },
+                    "paymentRequirements": {
+                      "scheme": "exact",
+                      "network": "base",
+                      "maxAmountRequired": "1000000",
+                      "resource": "https://api.example.com/premium/resource/123",
+                      "description": "Premium API access for data analysis",
+                      "mimeType": "application/json",
+                      "outputSchema": {
+                        "data": "string"
+                      },
+                      "payTo": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+                      "maxTimeoutSeconds": 10,
+                      "asset": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+                      "extra": {
+                        "gasLimit": "1000000"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully verified payment on the x402 protocol.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "isValid": {
+                      "type": "boolean",
+                      "description": "Indicates whether the payment is valid.",
+                      "example": false
+                    },
+                    "invalidReason": {
+                      "$ref": "#/components/schemas/x402VerifyInvalidReason"
+                    },
+                    "payer": {
+                      "type": "string",
+                      "description": "The onchain address of the client that is paying for the resource. For EVM networks, the payer will be a 0x-prefixed, checksum EVM address. For Solana-based networks, the payer will be a base58-encoded Solana address.",
+                      "pattern": "^0x[a-fA-F0-9]{40}|[A-Za-z0-9][A-Za-z0-9-]{0,34}[A-Za-z0-9]$",
+                      "example": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e

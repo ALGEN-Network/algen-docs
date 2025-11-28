@@ -52,7 +52,9 @@
           {
             "group": "x402",
             "pages": [
-              "api-reference/endpoint/supported"
+              "api-reference/endpoint/supported",
+              "api-reference/endpoint/settle",
+              "api-reference/endpoint/verify"
             ]
           }
         ]
