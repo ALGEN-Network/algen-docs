@@ -131,8 +131,9 @@
             "description": "POST to settle x402 payments."
           }
         ],
-        "request": {
-          "body": {
+        "requestBody": {
+          "required": true,
+          "content": {
             "application/json": {
               "schema": {
                 "type": "array",
@@ -201,54 +202,58 @@
         },
         "responses": {
           "200": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "description": "Indicates whether the payment settlement is successful.",
-                      "example": false
+            "description": "Successfully settled payment on the x402 protocol.",
+            "content":{
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean",
+                        "description": "Indicates whether the payment settlement is successful.",
+                        "example": false
+                      },
+                      "errorReason": {
+                        "$ref": "#/components/schemas/x402SettleErrorReason"
+                      },
+                      "payer": {
+                        "type": "string",
+                        "description": "The onchain address of the client paying for the resource.",
+                        "pattern": "^0x[a-fA-F0-9]{40}|[A-Za-z0-9][A-Za-z0-9-]{0,34}[A-Za-z0-9]$",
+                        "example": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
+                      },
+                      "transaction": {
+                        "type": "string",
+                        "description": "The settlement transaction hash.",
+                        "pattern": "^0x[a-fA-F0-9]{40}|[A-Za-z0-9][A-Za-z0-9-]{0,34}[A-Za-z0-9]$",
+                        "example": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
+                      },
+                      "network": {
+                        "type": "string",
+                        "description": "The network where settlement occurred.",
+                        "example": "base"
+                      }
                     },
-                    "errorReason": {
-                      "$ref": "#/components/schemas/x402SettleErrorReason"
-                    },
-                    "payer": {
-                      "type": "string",
-                      "description": "The onchain address of the client paying for the resource.",
-                      "pattern": "^0x[a-fA-F0-9]{40}|[A-Za-z0-9][A-Za-z0-9-]{0,34}[A-Za-z0-9]$",
-                      "example": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
-                    },
-                    "transaction": {
-                      "type": "string",
-                      "description": "The settlement transaction hash.",
-                      "pattern": "^0x[a-fA-F0-9]{40}|[A-Za-z0-9][A-Za-z0-9-]{0,34}[A-Za-z0-9]$",
-                      "example": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
-                    },
-                    "network": {
-                      "type": "string",
-                      "description": "The network where settlement occurred.",
-                      "example": "base"
-                    }
-                  },
-                  "required": ["success", "payer", "transaction", "network"]
-                }
-              },
-              "examples": {
-                "example": {
-                  "value": {
-                    "success": false,
-                    "errorReason": "insufficient_funds",
-                    "payer": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
-                    "transaction": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
-                    "network": "base"
+                    "required": ["success", "payer", "transaction", "network"]
                   }
-                }
-              },
-              "description": "Successfully settled payment on the x402 protocol."
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "success": false,
+                      "errorReason": "insufficient_funds",
+                      "payer": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+                      "transaction": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+                      "network": "base"
+                    }
+                  }
+                },
+                "description": "Successfully settled payment on the x402 protocol."
+              }
             }
+            
           },
           "400": {
             "description": "unexpected error",
@@ -270,8 +275,9 @@
             "description": "Verify x402 payment."
           }
         ],
-        "request": {
-          "body": {
+        "requestBody": {
+          "required": true,
+          "content": {
             "application/json": {
               "schema": {
                 "type": "object",
@@ -556,7 +562,6 @@
             "type": "object",
             "oneOf": [
               { "$ref": "#/components/schemas/x402ExactEvmPayload" },
-              { "$ref": "#/components/schemas/x402ExactSolanaPayload" }
             ],
             "example": {
               "signature": "0xf3746613c2d920b5fdabc0856f2aeb2d4f88ee6037b8cc5d04a71a4462f13480",
