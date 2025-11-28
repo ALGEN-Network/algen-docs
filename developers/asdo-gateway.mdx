@@ -1,0 +1,96 @@
+---
+sidebarTitle: "ASDO Gateway"
+title: "ASDO: Intelligent Unified RPC Gateway"
+description: "ASDO (Algen Self-Determined Option) is the intelligent unified RPC gateway of the Algen ecosystem. Functioning as an intelligent intermediary layer between users and distributed applications, SDO fundamentally reconstructs the multi-chain interaction paradigm through its innovative intent recognition system and unified asset management capabilities. It is not just a technical component, but represents a deep practice of Algen's "User First" philosophy—making complex underlying infrastructure completely transparent to users."
+---
+
+## 1. Architectural Paradigm
+
+### The Challenge: Fragmentation vs. Abstraction
+
+In multi-chain architectures, users are often plagued by cumbersome network switching and asset fragmentation. ASDO introduces the **Chain-Agnostic Interaction Model**, which shields the heterogeneity of the underlying blockchain by building a unified RPC access layer.
+
+### Core Value Proposition
+
+ASDO's core innovation lies in its dual intelligent engines:
+
+- **Intent Analysis Engine:** Automatically parses transaction intent and intelligently routes it to the optimal execution layer.
+- **Unified Asset Synthesis:** Aggregates the status of assets across the entire ecosystem in real time, providing a top-down view of assets.
+
+## 2. System Architecture
+
+ASDO is a highly available, low-latency Intelligent Proxy Layer that sits between the client and the underlying distributed network.
+
+### 2.1. Data Flow Architecture
+
+1. **Request Ingestion:** The client sends a standard JSON-RPC request to the ASDO unified endpoint.
+2. **Semantic Validation:** The gateway performs protocol-level validation and semantic parsing.
+3. **Intelligent Routing Decision:**
+
+- **State Queries:** Distribute queuing based on load balancing strategies or contextual heuristics.
+- **Transaction Execution:** Activate the **Chain Identification Service (CIS)** for in-depth intent analysis.
+
+4. **Execution & Response:** The request is precisely routed to the target network node (Algen L1/L2/Ethereum), and the result is returned via gateway aggregation.
+
+### 2.2. Core Components
+
+### Intelligent Dispatcher
+
+As the central hub for traffic, it is responsible for high-throughput request ingestion and load balancing. It uses a dynamic weighting algorithm to distribute high-frequency read requests, such as `eth_blockNumber`, to the healthiest node cluster.
+
+### Chain Identification Service (CIS)
+
+CIS is the decision-making brain of ASDO, responsible for interpreting the "semantic intent" of a transaction.
+
+- **Intent Extraction:** Deeply analyzes the payload of `eth_sendRawTransaction` to extract the target contract address and function signature.
+- **Deterministic Mapping:** Accesses Redis-based high-performance distributed indexes, matching `Contract Address -> ChainID` mappings in milliseconds.
+- **Adaptive Routing:** For newly deployed contracts that are not indexed, an adaptive rollback mechanism is initiated to determine the target network through full-chain probing.
+
+### Unified Asset Aggregation Service (UAAS)
+
+UAAS achieves **logical unification** for cross-chain assets.
+
+- **Parallel State Query:** Parallelizes the query of account status across all networks within the Algen ecosystem.
+- **Asset Normalization:** Through a standardized token mapping table, it automatically aggregates the distributed balances of the native token (ALG) and mainstream assets (USDT/USDV/USDC), presenting a single "total balance across the entire chain" to the client.
+
+## 3. Features & UX Evolution (Core Features)
+
+### 3.1. Zero-Config Interface
+
+ASDO provides a single RPC endpoint URL, completely eliminating configuration redundancy for DApp developers in multi-chain environments.
+
+- **Implicit Chain Resolution:** Developers do not need to hardcode `chainId` on the front end; the ASDO backend automatically handles all context switching.
+
+### 3.2. Intent-Driven Transaction Routing
+
+ASDO simplifies the user's workflow from "select network -\> switch RPC -\> send transaction" to "**initiate transaction**".
+
+- **Context Awareness:** Whether a user is interacting with an L1 DeFi protocol or minting NFTs in an L2 GameFi, CIS can accurately identify and route the interaction without the user's awareness.
+
+| Transaction Context            | Analysis Mechanism            | Routing Logic                     |
+| :----------------------------- | :---------------------------- | :-------------------------------- |
+| **Smart Contract Interaction** | Target Address Resolution     | Directed Routing via CIS Database |
+| **Asset Transfer**             | Token Contract Identification | Chain-Specific Execution          |
+| **State Read**                 | Context Heuristics            | Optimal Node Load Balancing       |
+
+## 4. Implementation Specifications
+
+### 4.1. High-Performance Proxy
+
+The ASDO gateway is built on a high-performance reverse proxy architecture, strictly follows the JSON-RPC 2.0 specification, and implements **Stateless Scalability**.
+
+### 4.2. Distributed Mapping Integrity
+
+The mapping database maintained by CIS is dynamically updated by indexing the entire network of contract deployment events (`ContractDeployment`) in real time. The system has a built-in **Conflict Resolution** mechanism to ensure routing determinism when contracts with the same name exist on multiple chains (such as CREATE2 deployment).
+
+### 4.3. Security & Reliability
+
+- **Non-Custodial Routing:** ASDO is only responsible for routing signed raw transactions and does not access user private keys, maintaining the principle of decentralized security.
+- **Cluster Resilience:** The backend node cluster is equipped with automatic health checks and failover mechanisms to ensure 99.99% service availability.
+
+## 5. Future Roadmap
+
+ASDO represents the ultimate form of Web3 interactive experience—**Chainless Experience**.
+
+- **Advanced Intent Solving:** Future updates will support more sophisticated cross-chain atomic transaction intent identification.
+- **Custom Asset Indexing:** Opens the UAAS interface, allowing developers to customize the aggregation logic of the asset list.
