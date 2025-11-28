@@ -15,13 +15,13 @@ By the end of this quickstart, you'll be able to:
 
 1. Create a new project directory
 
-```
+```bash
 mkdir my-algen-project && cd my-algen-project
 ```
 
 1. Install Foundry, a powerful framework for smart contract development
 
-```
+```bash
 curl -L <https://foundry.paradigm.xyz> | bash
 foundryup
 ```
@@ -30,7 +30,7 @@ This installs Foundry and updates it to the latest version.
 
 1. Initialize a new Solidity project
 
-```
+```bash
 forge init
 ```
 
@@ -50,14 +50,14 @@ Let's set up both of these:
 1. Create a `.env` file in your project's root directory
 2. Add the Algen network RPC URL to your `.env` file
 
-```
+```bash
 ALGEN_L2_RPC_URL="<https://rpc.alg2.algen.network>"
 ALGEN_L2_TEST_RPC_URL="<https://rpc.alg2-test.algen.network>"
 ```
 
 1. Load your environment variables
 
-```
+```bash
 source .env
 ```
 
@@ -65,7 +65,7 @@ source .env
 
 1. Store your private key in Foundry's secure keystore
 
-```
+```bash
 cast wallet import deployer --interactive
 ```
 
@@ -79,7 +79,7 @@ Now that your environment is set up, let's deploy your contracts to Algen L2 Tes
 
 1. (Optional) First, perform a dry run to simulate the deployment and verify everything is configured correctly:
 
-```
+```bash
 forge create ./src/Counter.sol:Counter --rpc-url $ALGEN_L2_TEST_RPC_URL --account deployer
 ```
 
@@ -87,7 +87,7 @@ This performs a simulation without broadcasting the transaction to the network. 
 
 1. Deploy your contract by adding the `--broadcast` flag:
 
-```
+```bash
 forge create ./src/Counter.sol:Counter --rpc-url $ALGEN_L2_TEST_RPC_URL --account deployer --broadcast
 ```
 
@@ -99,7 +99,7 @@ Note the format of the contract being deployed is `<contract-path>:<contract-nam
 
 1. Copy the deployed contract address and add it to your `.env` file:
 
-```
+```bash
 COUNTER_CONTRACT_ADDRESS="0x..."
 ```
 
@@ -107,7 +107,7 @@ Replace `0x...` with your actual deployed contract address from the output above
 
 1. Load the new environment variable:
 
-```
+```bash
 source .env
 ```
 
@@ -118,7 +118,7 @@ To ensure your contract was deployed successfully:
 1. Check the transaction on [Algen L2 Test Scan](https://scan.alg2-test.algen.network) using your transaction hash
 2. Use the `cast` command to interact with your deployed contract from the command line:
 
-```
+```bash
 cast call $COUNTER_CONTRACT_ADDRESS "number()(uint256)" --rpc-url $ALGEN_L2_TEST_RPC_URL
 ```
 
