@@ -8,12 +8,18 @@
   },
   "servers": [
     {
-      "url": "https://sdo-test.algen.network"
+      "url": ""
     }
   ],
   "paths": {
     "/": {
       "post": {
+        "servers": [
+          {
+            "url": "https://asdo.algen.network",
+            "description": "Transaction router server"
+          }
+        ],
         "description": "Construct the correct original transaction before sending it to the right chain.",
         "requestBody": {
           "description": "eth_routerTransaction",
@@ -43,8 +49,81 @@
           }
         }
       }
+    },
+
+    "/supported": {
+      "get": {
+        "servers": [
+          {
+            "url": "https://x402.algen.network/facilitator",
+            "description": "x402 supported API"
+          }
+        ],
+        "description": "Get supported network and pay method",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved supported payment kinds for the x402 protocol.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["kinds"],
+                  "properties": {
+                    "kinds": {
+                      "type": "array",
+                      "description": "The list of supported payment kinds.",
+                      "items": {
+                        "$ref": "#/components/schemas/x402SupportedPaymentKind"
+                      },
+                      "example": [
+                        {
+                          "x402Version": 1,
+                          "scheme": "exact",
+                          "network": "mesherX"
+                        },
+                        {
+                          "x402Version": 1,
+                          "scheme": "exact",
+                          "network": "mesherX-testnet"
+                        }
+                      ]
+                    }
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "kinds": [
+                        {
+                          "x402Version": 1,
+                          "scheme": "exact",
+                          "network": "mesherX"
+                        },
+                        {
+                          "x402Version": 1,
+                          "scheme": "exact",
+                          "network": "mesherX-testnet"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
     }
   },
+
   "components": {
     "schemas": {
       "RouterTransaction": {
@@ -69,6 +148,7 @@
           }
         }
       },
+
       "RouterTransactionRes": {
         "type": "object",
         "required": ["nonce", "chainId", "gasLimit"],
@@ -99,6 +179,31 @@
           }
         }
       },
+
+      "x402SupportedPaymentKind": {
+        "type": "object",
+        "required": ["x402Version", "scheme", "network"],
+        "properties": {
+          "x402Version": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The version of the payment protocol"
+          },
+          "scheme": {
+            "type": "string",
+            "description": "The scheme of the payment protocol",
+            "enum": ["exact"],
+            "example": "exact"
+          },
+          "network": {
+            "type": "string",
+            "description": "The network of the blockchain",
+            "enum": ["mesherX", "mesherX-testnet"],
+            "example": "mesherX"
+          }
+        }
+      },
+
       "Error": {
         "type": "object",
         "required": ["error", "message"],
