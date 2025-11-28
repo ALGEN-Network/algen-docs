@@ -4,7 +4,7 @@
     "title": "Algen API",
     "description": "Some important api listed in there",
     "license": { "name": "MIT" },
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "servers": [
     {
