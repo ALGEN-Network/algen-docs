@@ -82,12 +82,14 @@ Verify x402 payment validity.
   "info": {
     "title": "Algen API",
     "description": "Some important api listed in there",
-    "license": { "name": "MIT" },
+    "license": {
+      "name": "MIT"
+    },
     "version": "1.0.0"
   },
   "servers": [
     {
-      "url": ""
+      "url": "https://asdo.algen.network"
     }
   ],
   "paths": {
@@ -105,7 +107,9 @@ Verify x402 payment validity.
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/RouterTransaction" }
+              "schema": {
+                "$ref": "#/components/schemas/RouterTransaction"
+              }
             }
           }
         },
@@ -114,7 +118,9 @@ Verify x402 payment validity.
             "description": "Original transaction object",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/RouterTransactionRes" }
+                "schema": {
+                  "$ref": "#/components/schemas/RouterTransactionRes"
+                }
               }
             }
           },
@@ -122,14 +128,15 @@ Verify x402 payment validity.
             "description": "unexpected error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Error" }
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
               }
             }
           }
         }
       }
     },
-
     "/supported": {
       "get": {
         "servers": [
@@ -146,7 +153,9 @@ Verify x402 payment validity.
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "required": ["kinds"],
+                  "required": [
+                    "kinds"
+                  ],
                   "properties": {
                     "kinds": {
                       "type": "array",
@@ -194,14 +203,15 @@ Verify x402 payment validity.
             "description": "unexpected error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Error" }
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
               }
             }
           }
         }
       }
     },
-
     "/settle": {
       "post": {
         "servers": [
@@ -282,7 +292,7 @@ Verify x402 payment validity.
         "responses": {
           "200": {
             "description": "Successfully settled payment on the x402 protocol.",
-            "content":{
+            "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
@@ -312,10 +322,15 @@ Verify x402 payment validity.
                       "network": {
                         "type": "string",
                         "description": "The network where settlement occurred.",
-                        "example": "base"
+                        "example": "mesherX"
                       }
                     },
-                    "required": ["success", "payer", "transaction", "network"]
+                    "required": [
+                      "success",
+                      "payer",
+                      "transaction",
+                      "network"
+                    ]
                   }
                 },
                 "examples": {
@@ -325,27 +340,26 @@ Verify x402 payment validity.
                       "errorReason": "insufficient_funds",
                       "payer": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
                       "transaction": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
-                      "network": "base"
+                      "network": "mesherX"
                     }
                   }
-                },
-                "description": "Successfully settled payment on the x402 protocol."
+                }
               }
             }
-            
           },
           "400": {
             "description": "unexpected error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Error" }
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
               }
             }
           }
         }
       }
-  },
-
+    },
     "/verify": {
       "post": {
         "servers": [
@@ -384,7 +398,7 @@ Verify x402 payment validity.
                     "paymentPayload": {
                       "x402Version": 1,
                       "scheme": "exact",
-                      "network": "base",
+                      "network": "mesherX",
                       "payload": {
                         "signature": "0xf3746613c2d920b5fdabc0856f2aeb2d4f88ee6037b8cc5d04a71a4462f13480",
                         "authorization": {
@@ -399,7 +413,7 @@ Verify x402 payment validity.
                     },
                     "paymentRequirements": {
                       "scheme": "exact",
-                      "network": "base",
+                      "network": "mesherX",
                       "maxAmountRequired": "1000000",
                       "resource": "[https://api.example.com/premium/resource/123](https://api.example.com/premium/resource/123)",
                       "description": "Premium API access for data analysis",
@@ -438,7 +452,7 @@ Verify x402 payment validity.
                     },
                     "payer": {
                       "type": "string",
-                      "description": "The onchain address of the client that is paying for the resource. For EVM networks, the payer will be a 0x-prefixed, checksum EVM address. For Solana-based networks, the payer will be a base58-encoded Solana address.",
+                      "description": "The onchain address of the client that is paying for the resource.",
                       "pattern": "^0x[a-fA-F0-9]{40}|[A-Za-z0-9][A-Za-z0-9-]{0,34}[A-Za-z0-9]$",
                       "example": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
                     }
@@ -462,13 +476,18 @@ Verify x402 payment validity.
           }
         }
       }
-    },
+    }
   },
   "components": {
     "schemas": {
       "RouterTransaction": {
         "type": "object",
-        "required": ["from", "to", "data", "value"],
+        "required": [
+          "from",
+          "to",
+          "data",
+          "value"
+        ],
         "properties": {
           "from": {
             "type": "string",
@@ -488,10 +507,13 @@ Verify x402 payment validity.
           }
         }
       },
-
       "RouterTransactionRes": {
         "type": "object",
-        "required": ["nonce", "chainId", "gasLimit"],
+        "required": [
+          "nonce",
+          "chainId",
+          "gasLimit"
+        ],
         "properties": {
           "nonce": {
             "type": "string",
@@ -519,10 +541,13 @@ Verify x402 payment validity.
           }
         }
       },
-
       "x402SupportedPaymentKind": {
         "type": "object",
-        "required": ["x402Version", "scheme", "network"],
+        "required": [
+          "x402Version",
+          "scheme",
+          "network"
+        ],
         "properties": {
           "x402Version": {
             "type": "integer",
@@ -532,18 +557,22 @@ Verify x402 payment validity.
           "scheme": {
             "type": "string",
             "description": "The scheme of the payment protocol",
-            "enum": ["exact"],
+            "enum": [
+              "exact"
+            ],
             "example": "exact"
           },
           "network": {
             "type": "string",
             "description": "The network of the blockchain",
-            "enum": ["mesherX", "mesherX-testnet"],
+            "enum": [
+              "mesherX",
+              "mesherX-testnet"
+            ],
             "example": "mesherX"
           }
         }
       },
-
       "Url": {
         "type": "string",
         "format": "uri",
@@ -556,7 +585,9 @@ Verify x402 payment validity.
       "X402Version": {
         "type": "integer",
         "description": "The version of the x402 protocol.",
-        "enum": [1],
+        "enum": [
+          1
+        ],
         "example": 1
       },
       "x402ExactEvmPayload": {
@@ -606,7 +637,14 @@ Verify x402 payment validity.
                 "example": "0x1234567890abcdef1234567890abcdef12345678"
               }
             },
-            "required": ["from","to","value","validAfter","validBefore","nonce"],
+            "required": [
+              "from",
+              "to",
+              "value",
+              "validAfter",
+              "validBefore",
+              "nonce"
+            ],
             "example": {
               "from": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
               "to": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
@@ -617,7 +655,10 @@ Verify x402 payment validity.
             }
           }
         },
-        "required": ["signature", "authorization"],
+        "required": [
+          "signature",
+          "authorization"
+        ],
         "example": {
           "signature": "0xf3746613c2d920b5fdabc0856f2aeb2d4f88ee6037b8cc5d04a71a4462f13480",
           "authorization": {
@@ -634,13 +675,30 @@ Verify x402 payment validity.
         "type": "object",
         "description": "The x402 protocol payment payload attached to X-PAYMENT header.",
         "properties": {
-          "x402Version": { "$ref": "#/components/schemas/X402Version" },
-          "scheme": { "type": "string", "enum": ["exact"], "example": "exact" },
-          "network": { "type": "string", "enum": ["base-sepolia","base","solana-devnet","solana"], "example": "base" },
+          "x402Version": {
+            "$ref": "#/components/schemas/X402Version"
+          },
+          "scheme": {
+            "type": "string",
+            "enum": [
+              "exact"
+            ],
+            "example": "exact"
+          },
+          "network": {
+            "type": "string",
+            "enum": [
+              "mesherX",
+              "mesherX-testnet"
+            ],
+            "example": "mesherX"
+          },
           "payload": {
             "type": "object",
             "oneOf": [
-              { "$ref": "#/components/schemas/x402ExactEvmPayload" },
+              {
+                "$ref": "#/components/schemas/x402ExactEvmPayload"
+              }
             ],
             "example": {
               "signature": "0xf3746613c2d920b5fdabc0856f2aeb2d4f88ee6037b8cc5d04a71a4462f13480",
@@ -655,11 +713,16 @@ Verify x402 payment validity.
             }
           }
         },
-        "required": ["x402Version","scheme","network","payload"],
+        "required": [
+          "x402Version",
+          "scheme",
+          "network",
+          "payload"
+        ],
         "example": {
           "x402Version": 1,
           "scheme": "exact",
-          "network": "base",
+          "network": "mesherX",
           "payload": {
             "signature": "0xf3746613c2d920b5fdabc0856f2aeb2d4f88ee6037b8cc5d04a71a4462f13480",
             "authorization": {
@@ -677,27 +740,77 @@ Verify x402 payment validity.
         "type": "object",
         "description": "The payment requirements expected by the resource server.",
         "properties": {
-          "scheme": { "type": "string", "enum": ["exact"], "example": "exact" },
-          "network": { "type": "string", "enum": ["base-sepolia","base","solana-devnet","solana"], "example": "base" },
-          "maxAmountRequired": { "type": "string", "example": "1000000" },
-          "resource": { "$ref": "#/components/schemas/Url", "example": "https://api.example.com/premium/resource/123" },
-          "description": { "type": "string", "example": "Premium API access for data analysis" },
-          "mimeType": { "type": "string", "example": "application/json" },
-          "outputSchema": { "type": "object", "additionalProperties": true, "example": { "data": "string" } },
+          "scheme": {
+            "type": "string",
+            "enum": [
+              "exact"
+            ],
+            "example": "exact"
+          },
+          "network": {
+            "type": "string",
+            "enum": [
+              "mesherX",
+              "mesherX-testnet"
+            ],
+            "example": "mesherX"
+          },
+          "maxAmountRequired": {
+            "type": "string",
+            "example": "1000000"
+          },
+          "resource": {
+            "$ref": "#/components/schemas/Url",
+            "example": "https://api.example.com/premium/resource/123"
+          },
+          "description": {
+            "type": "string",
+            "example": "Premium API access for data analysis"
+          },
+          "mimeType": {
+            "type": "string",
+            "example": "application/json"
+          },
+          "outputSchema": {
+            "type": "object",
+            "additionalProperties": true,
+            "example": {
+              "data": "string"
+            }
+          },
           "payTo": {
             "type": "string",
             "pattern": "^0x[a-fA-F0-9]{40}|[A-Za-z0-9][A-Za-z0-9-]{0,34}[A-Za-z0-9]$",
             "example": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
           },
-          "maxTimeoutSeconds": { "type": "integer", "example": 10 },
+          "maxTimeoutSeconds": {
+            "type": "integer",
+            "example": 10
+          },
           "asset": {
             "type": "string",
             "pattern": "^0x[a-fA-F0-9]{40}|[A-Za-z0-9][A-Za-z0-9-]{0,34}[A-Za-z0-9]$",
             "example": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"
           },
-          "extra": { "type": "object", "additionalProperties": true, "example": { "gasLimit": "1000000" } }
+          "extra": {
+            "type": "object",
+            "additionalProperties": true,
+            "example": {
+              "gasLimit": "1000000"
+            }
+          }
         },
-        "required": ["scheme","network","maxAmountRequired","resource","description","mimeType","payTo","asset","maxTimeoutSeconds"]
+        "required": [
+          "scheme",
+          "network",
+          "maxAmountRequired",
+          "resource",
+          "description",
+          "mimeType",
+          "payTo",
+          "asset",
+          "maxTimeoutSeconds"
+        ]
       },
       "x402SettleErrorReason": {
         "type": "string",
@@ -765,7 +878,10 @@ Verify x402 payment validity.
       },
       "Error": {
         "type": "object",
-        "required": ["error", "message"],
+        "required": [
+          "error",
+          "message"
+        ],
         "properties": {
           "error": {
             "type": "integer",
