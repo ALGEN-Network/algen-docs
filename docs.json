@@ -20,7 +20,7 @@
               "developers/why-algen",
               "developers/deploy-on-algen",
               "developers/asdo-gateway",
-              "developers/x402-payment"              
+              "developers/x402-payment"
             ]
           },
           {
@@ -29,7 +29,7 @@
               "developers/connecting-to-algen",
               "developers/contract-addresses",
               "developers/network-fees",
-              "developers/transaction-finality"              
+              "developers/transaction-finality"
             ]
           }
         ]
@@ -46,6 +46,7 @@
           {
             "group": "ASDO",
             "pages": [
+              "api-reference/asdo/untitled-page",
               "api-reference/endpoint/asdo"
             ]
           },
