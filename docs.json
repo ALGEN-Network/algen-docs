@@ -45,10 +45,7 @@
           },
           {
             "group": "ASDO",
-            "pages": [
-              "api-reference/asdo/untitled-page",
-              "api-reference/endpoint/asdo"
-            ]
+            "pages": []
           },
           {
             "group": "x402",
